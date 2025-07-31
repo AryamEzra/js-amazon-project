@@ -63,7 +63,7 @@ const date = new Date(); // built in date class
 
 export let products = [];
 export function loadProductsFetch(){
-  const promise = fetch('https://supersimplebackend.dev/products').then((response) => {
+  const promise = fetch('https:/supersimplebackend.dev/products').then((response) => {
     return response.json();
   }).then((productsData) =>{
     // console.log(productsData);
@@ -74,12 +74,16 @@ export function loadProductsFetch(){
       return new Product(productDetails);
     });
 
-    console.log(products);
+    console.log('load products');
 
+  }).catch((error) => {
+    console.error('Error loading products:', error);
   });
 
   return promise;
 }
+
+// loadProductsFetch();
 
 /*
 loadProductsFetch().then(() =>{
@@ -101,6 +105,10 @@ export function loadProducts(func){
     console.log(products);
 
     func();
+  });
+
+  xhr.addEventListener('error', () => {
+    console.error('Error loading products');
   });
 
   xhr.open('GET', 'https://supersimplebackend.dev/products');
