@@ -1,13 +1,34 @@
 import { cart, addToCart, calculateCartQuantity } from '../data/cart.js';
 import { products, loadProducts } from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
-loadProducts(renderProductsGrid);
 
+let allProducts = [];
 
-function renderProductsGrid(){
+loadProducts(() => {
+  allProducts = [...products]; 
+  renderProductsGrid(allProducts);
+
+  document.querySelector('.search-button').addEventListener('click', () => {
+    const searchTerm = document.querySelector('.search-bar').value.toLowerCase();
+    const filteredProducts = allProducts.filter(product =>
+      product.name.toLowerCase().includes(searchTerm) ||
+      (product.keywords && product.keywords.some(keyword => 
+        keyword.toLowerCase().includes(searchTerm))
+    ));
+    renderProductsGrid(filteredProducts);
+  });
+
+  document.querySelector('.search-bar').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      document.querySelector('.search-button').click();
+    }
+  });
+});
+
+function renderProductsGrid(productsToRender = products) {
   let productsHTML = '';
 
-  products.forEach((product) => {
+  productsToRender.forEach((product) => {
     productsHTML += `
       <div class="product-container">
         <div class="product-image-container">
@@ -32,7 +53,7 @@ function renderProductsGrid(){
         </div>
 
         <div class="product-quantity-container">
-          <select class = "js-quantity-selector-${product.id}">
+          <select class="js-quantity-selector-${product.id}">
             <option selected value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -56,15 +77,15 @@ function renderProductsGrid(){
         </div>
 
         <button class="add-to-cart-button button-primary js-add-to-cart"
-        data-product-id = "${product.id}">
+        data-product-id="${product.id}">
           Add to Cart
         </button>
-      </div>`
+      </div>`;
   });
 
   document.querySelector('.js-products-grid').innerHTML = productsHTML;
 
-  function updateCartQuantity() {
+  function updateCartQuantity(productId) {
     const cartQuantity = calculateCartQuantity();
     document.querySelector('.js-cart-quantity').innerText = cartQuantity;
 
@@ -74,19 +95,14 @@ function renderProductsGrid(){
       setTimeout(() => {
         addedMessage.classList.remove('visible');
       }, 2000);
+    }
   }
-
-}
 
   document.querySelectorAll('.js-add-to-cart').forEach((button) => {
     button.addEventListener('click', () => {
-      // const productId = button.dataset.productId;
       const { productId } = button.dataset;
-
       addToCart(productId);
-      updateCartQuantity();
-
+      updateCartQuantity(productId);
     });
   });
-
 }
