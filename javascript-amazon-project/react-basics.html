@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Basics</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+
+    <!--
+    OOur website can't understand JSX so we need to convert it to JS to do that we first load the babel external library then tell the code to translate all the code inside the text/babel tag to translate it to JS code.
+    -->
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+      const button = <button>hello</button>; // this is the jsx code in DOM we use the code bewlow
+      /*
+      const button = document.createElement('button');
+      button.textContent = 'hello';
+      */
+      const paragraph = <p>paragraph of text</p>;
+
+      const div = (
+        <div>
+          <button>hello</button>
+          <p>paragraph of text {2 + 2}</p>
+        </div>
+      );
+
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render(div);
+      // give react a contrainer then display the element inside that container
+      // to display multiple elements we will use div
+    </script>
+  </body>
+</html>
